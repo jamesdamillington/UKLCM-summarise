@@ -36,3 +36,30 @@ read_zones <- function(path, id_field) {
   # zonal extraction. st_make_valid() leaves valid geometries unchanged.
   sf::st_make_valid(zones)
 }
+
+# Read the settings for one run from the project config file.
+#
+# Returns a flat list: run_name, the run's own settings (lcm_year, lcm_path,
+# lcm_scheme, zones_path, zone_id_field, class_grouping), plus class_groups
+# and composite_groups from the run's named class grouping.
+# run = NULL uses the config's default_run.
+read_run_config <- function(config_path = "config/config.yml", run = NULL) {
+  config <- yaml::read_yaml(config_path)
+  run <- run %||% config$default_run
+
+  if (!run %in% names(config$runs)) {
+    stop("Run '", run, "' not found in ", config_path,
+         ". Available runs: ", toString(names(config$runs)), ".")
+  }
+  run_settings <- config$runs[[run]]
+
+  grouping_name <- run_settings$class_grouping
+  if (!grouping_name %in% names(config$class_groupings)) {
+    stop("Class grouping '", grouping_name, "' not found in ", config_path, ".")
+  }
+  grouping <- config$class_groupings[[grouping_name]]
+
+  list(run_name = run) |>
+    c(run_settings) |>
+    c(grouping[c("class_groups", "composite_groups")])
+}
