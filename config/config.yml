@@ -1,0 +1,52 @@
+# Project configuration.
+#
+# Everything that varies by LCM year, geography or analytical choice lives
+# here rather than in R/. Paths are relative to the project root.
+
+default_run: london_rui_2022
+
+# One entry per LCM year x geography x zoning combination.
+# Phase 2 will add further years and England-wide zones.
+runs:
+  london_rui_2022:
+    lcm_year: 2022
+    lcm_path: data/LCM2022-25m-London-RUI/LCM2022-25m-London-RUI.tif
+    lcm_scheme: lcm2021_21class
+    zones_path: data/LSOA_2021/LSOA_2021_EW_BSC_V4-London-RUI.shp
+    zone_id_field: LSOA21CD
+    class_grouping: provisional_v0
+
+# Class groupings - PROVISIONAL (wildland classes not yet decided).
+#
+# class_groups must partition the 21 LCM classes (each class in exactly one
+# group) so that group fractions sum to 1 per zone.
+#
+# composite_groups combine class_groups into candidate definitions, so that
+# alternative wildland definitions can be compared from one zonal extraction.
+class_groupings:
+  provisional_v0:
+    class_groups:
+      # Woodland types kept separate: likely different fire behaviour/risk
+      # (e.g. conifer litter and resinous fuels vs broadleaf).
+      deciduous_woodland: [1]
+      coniferous_woodland: [2]
+      arable: [3]
+      improved_grassland: [4]            # likely includes amenity grassland and some parks
+      seminatural_grassland: [5, 6, 7]   # neutral, calcareous, acid
+      heath: [9, 10]                     # heather, heather grassland
+      wetland: [8, 11, 19]               # fen, bog, saltmarsh
+      water: [13, 14]                    # saltwater, freshwater
+      bare_coastal: [12, 15, 16, 17, 18] # inland rock, supralittoral/littoral rock and sediment
+      urban: [20]
+      suburban: [21]
+    composite_groups:
+      built: [urban, suburban]
+      woodland: [deciduous_woodland, coniferous_woodland]
+      # Narrow: semi-natural vegetation only; closest to Schug et al. "wildland vegetation".
+      wildland_narrow: [deciduous_woodland, coniferous_woodland, seminatural_grassland, heath, wetland]
+      # Broad: adds improved grassland, since UK urban-edge fires can start in parks
+      # and amenity grassland (e.g. Dagenham 2022). How LCM classes park grassland
+      # (improved vs neutral) is uncertain and worth checking against known sites.
+      wildland_broad: [deciduous_woodland, coniferous_woodland, seminatural_grassland, heath, wetland, improved_grassland]
+      # Broadest: adds arable (standing crops and stubble in drought summers).
+      wildland_broadest: [deciduous_woodland, coniferous_woodland, seminatural_grassland, heath, wetland, improved_grassland, arable]
