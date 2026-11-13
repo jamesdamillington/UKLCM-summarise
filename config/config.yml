@@ -5,6 +5,12 @@
 
 default_run: london_rui_2022
 
+# Output locations, shared by all runs. Each run writes to a subfolder named
+# after the run.
+paths:
+  derived_dir: data/derived   # intermediate rasters (gitignored with data/)
+  output_dir: outputs         # zone-level tables
+
 # One entry per LCM year x geography x zoning combination.
 # Phase 2 will add further years and England-wide zones.
 runs:

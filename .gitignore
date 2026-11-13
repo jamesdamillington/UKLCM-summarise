@@ -52,5 +52,11 @@ rsconnect/
 #claude
 CLAUDE.md
 
-#data
+#inputs
 /data
+
+# targets pipeline store
+_targets/
+
+# pipeline outputs (regenerate with targets::tar_make())
+/outputs/

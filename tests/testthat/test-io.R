@@ -101,6 +101,7 @@ write_test_config <- function() {
   path <- tempfile(fileext = ".yml")
   list(
     default_run = "run_a",
+    paths = list(derived_dir = "derived", output_dir = "out"),
     runs = list(
       run_a = list(lcm_year = 2022L, zone_id_field = "zone_id", class_grouping = "g1"),
       run_b = list(lcm_year = 2015L, zone_id_field = "zone_id", class_grouping = "g1"),
@@ -129,6 +130,7 @@ test_that("read_run_config returns the requested run with its class grouping", {
 
   expect_equal(config$run_name, "run_b")
   expect_equal(config$lcm_year, 2015L)
+  expect_equal(config$output_dir, "out")
   expect_equal(config$class_groups, list(a = 1:2, b = 3L))
   expect_equal(config$composite_groups, list(ab = c("a", "b")))
 })
@@ -146,6 +148,7 @@ test_that("the project config's default run has the settings the pipeline needs"
 
   expect_true(all(
     c("run_name", "lcm_year", "lcm_path", "lcm_scheme", "zones_path",
-      "zone_id_field", "class_groups", "composite_groups") %in% names(config)
+      "zone_id_field", "derived_dir", "output_dir", "class_groups",
+      "composite_groups") %in% names(config)
   ))
 })

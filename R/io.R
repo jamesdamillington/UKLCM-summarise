@@ -40,8 +40,9 @@ read_zones <- function(path, id_field) {
 # Read the settings for one run from the project config file.
 #
 # Returns a flat list: run_name, the run's own settings (lcm_year, lcm_path,
-# lcm_scheme, zones_path, zone_id_field, class_grouping), plus class_groups
-# and composite_groups from the run's named class grouping.
+# lcm_scheme, zones_path, zone_id_field, class_grouping), the shared output
+# paths (derived_dir, output_dir), plus class_groups and composite_groups
+# from the run's named class grouping.
 # run = NULL uses the config's default_run.
 read_run_config <- function(config_path = "config/config.yml", run = NULL) {
   config <- yaml::read_yaml(config_path)
@@ -61,5 +62,6 @@ read_run_config <- function(config_path = "config/config.yml", run = NULL) {
 
   list(run_name = run) |>
     c(run_settings) |>
+    c(config$paths) |>
     c(grouping[c("class_groups", "composite_groups")])
 }
